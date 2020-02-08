@@ -1,13 +1,12 @@
-/**
+/*
  * @author donhk
  * 08/02/20
  */
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SerialTicTacToeTest {
+public class SerialTicTacToeBasic {
 
     //invalid inputs
     @Test
