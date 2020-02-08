@@ -93,7 +93,7 @@ public class SerialTicTacToe {
                 continue;
             }
             int perfectMatch = 1;
-            for (int row = diagonalSize + col; row < boardState.length(); row += diagonalSize) {
+            for (int row = diagonalSize + col; row <= boardState.length(); row += diagonalSize) {
                 final char cc = boardState.charAt(row - 1);
                 if (c == cc) {
                     perfectMatch++;
@@ -116,21 +116,22 @@ public class SerialTicTacToe {
         int perfectMatch = 0;
         char reference = '!';
         int rowRemaining = 0;
-        for (int x1 = 0; x1 < board.length(); x1++) {
+        for (int cell = 0; cell < board.length(); cell++) {
+            final char c = board.charAt(cell);
             if (rowRemaining == 0) {
                 rowRemaining = diagonalSize - 1;
             }
-            final char c = board.charAt(x1);
-            rowRemaining--;
-            if (c == '.') {
-                x1 += rowRemaining;
-                reference = '!';
-                perfectMatch = 0;
-                continue;
-            }
             if (reference == '!') {
-                reference = c;
-                perfectMatch++;
+                if (c == '.') {
+                    cell += rowRemaining;
+                    reference = '!';
+                    perfectMatch = 0;
+                    rowRemaining = 0;
+                    continue;
+                } else {
+                    reference = c;
+                    perfectMatch++;
+                }
             } else {
                 if (reference == c) {
                     perfectMatch++;
@@ -141,11 +142,14 @@ public class SerialTicTacToe {
                         return Evaluation.Owins;
                     }
                 } else {
-                    x1 += rowRemaining;
+                    cell += rowRemaining;
                     reference = '!';
                     perfectMatch = 0;
+                    rowRemaining = 0;
+                    continue;
                 }
             }
+            rowRemaining--;
         }
         return Evaluation.NoWinner;
     }
