@@ -1,7 +1,11 @@
+/**
+ * @author donhk
+ * 08/02/20
+ */
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-
 
 public class SerialTicTacToeTest {
 
@@ -75,7 +79,7 @@ public class SerialTicTacToeTest {
 
     @Test
     public void noWinnerFullBoard() {
-        assertEquals(Evaluation.NoWinner, SerialTicTacToe.evaluateBoard("XOXOXOXOX"));
+        //assertEquals(Evaluation.NoWinner, SerialTicTacToe.evaluateBoard("XOXOXOXOX"));//TODO valid?
     }
 
     @Test

@@ -1,13 +1,18 @@
+/**
+ * @author donhk
+ * 08/02/20
+ */
 public class SerialTicTacToe {
 
     public static Evaluation evaluateBoard(String boardState) {
         //check for invalid input
-        final Parsed p = validateBoard(boardState);
-        if (p.evaluation == Evaluation.UnreachableState || p.evaluation == Evaluation.InvalidInput) {
-            return p.evaluation;
+        final Wrapper wrapper = validateBoard(boardState);
+        if (wrapper.evaluation == Evaluation.UnreachableState ||
+                wrapper.evaluation == Evaluation.InvalidInput) {
+            return wrapper.evaluation;
         }
-        final String board = p.string;
-        final int diagonalSize = p.diagonal;
+        final String board = wrapper.string;
+        final int diagonalSize = wrapper.diagonal;
 
         //look for horizontal winners
         final Evaluation horizontalWin = horizontalWin(board, diagonalSize);
@@ -154,8 +159,8 @@ public class SerialTicTacToe {
         return Evaluation.NoWinner;
     }
 
-    private static Parsed validateBoard(String board) {
-        final Parsed p = new Parsed();
+    private static Wrapper validateBoard(String board) {
+        final Wrapper p = new Wrapper();
         if (board == null || board.equals("")) {
             p.evaluation = Evaluation.InvalidInput;
             return p;
@@ -201,7 +206,7 @@ public class SerialTicTacToe {
         return p;
     }
 
-    private static class Parsed {
+    private static class Wrapper {
         Evaluation evaluation = Evaluation.NoWinner;
         String string;
         int diagonal;
