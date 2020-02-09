@@ -1,6 +1,13 @@
 # tictactoe
 tic-tac-toe algorithm for N rows
 
+- It should find if there is a Winner horizontally
+- It should find if there is a Winner vertically
+- It should find if there is a Winner or in diagonal
+- The input is a String that represents the board as x|o|. everything ese is taken as '.'
+- The input is case insensitive
+- it should be as fast as possible
+
 Run the tests using these options
 
     -ea -Xmx10000m
@@ -36,5 +43,6 @@ Run the tests using these options
     Board evaluated summary | rows [25000] cells [625000000] seconds [4]
     BUILD SUCCESSFUL in 1m 27s
     
-#####TODO's
-*Add support for Millions using cache in disk
+#### TODO's
+
+*Add support for Millions of rows using cache in disk
