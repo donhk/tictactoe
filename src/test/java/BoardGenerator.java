@@ -67,10 +67,8 @@ public class BoardGenerator {
         //get final board
         for (int cellX = 0; cellX < size; cellX++) {
             for (int cellY = 0; cellY < size; cellY++) {
-                System.out.print(board[cellX][cellY] + "|");
                 sb.append(board[cellX][cellY]);
             }
-            System.out.println();
         }
         return sb.toString();
     }
@@ -91,22 +89,24 @@ public class BoardGenerator {
             board[p.x][p.y] = 'o';
         }
         //insert winner marks
+        int aX = size - 1;
+        int aY = 0;
         for (int wx = 0; wx < size; wx++) {
-            board[wx][wx] = 'x';
+            board[aX][aY] = 'x';
+            aX--;
+            aY++;
         }
         //get final board
         for (int cellX = 0; cellX < size; cellX++) {
             for (int cellY = 0; cellY < size; cellY++) {
-                System.out.print(board[cellX][cellY] + "|");
                 sb.append(board[cellX][cellY]);
             }
-            System.out.println();
         }
         return sb.toString();
     }
 
     private String createBoard(WinnerType type) {
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(size * size);
         final Character[][] board = new Character[size][size];
         //fill with empty
         for (int i = 0; i < size; i++) {
@@ -135,10 +135,8 @@ public class BoardGenerator {
         //get final board
         for (int cellX = 0; cellX < size; cellX++) {
             for (int cellY = 0; cellY < size; cellY++) {
-                System.out.print(board[cellX][cellY] + "|");
                 sb.append(board[cellX][cellY]);
             }
-            System.out.println();
         }
         return sb.toString();
     }
