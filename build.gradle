@@ -13,7 +13,7 @@ repositories {
 }
 test {
     minHeapSize = "1024m"
-    maxHeapSize = "3072m"
+    maxHeapSize = "5120m"
 }
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
