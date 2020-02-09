@@ -1,3 +1,6 @@
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Random;
 
 public class BoardGenerator {
@@ -37,12 +40,20 @@ public class BoardGenerator {
         return sb.toString();
     }
 
+    public String generateHorizontalWinner(String filename) {
+        return createBoard(WinnerType.H, filename);
+    }
+
     public String generateHorizontalWinner() {
-        return createBoard(WinnerType.H);
+        return createBoard(WinnerType.H, null);
+    }
+
+    public String generateVerticalWinner(String filename) {
+        return createBoard(WinnerType.V, filename);
     }
 
     public String generateVerticalWinner() {
-        return createBoard(WinnerType.V);
+        return createBoard(WinnerType.V, null);
     }
 
     public String generateLeftDiagonalWinner() {
@@ -105,40 +116,105 @@ public class BoardGenerator {
         return sb.toString();
     }
 
-    private String createBoard(WinnerType type) {
-        final StringBuilder sb = new StringBuilder(size * size);
-        final Character[][] board = new Character[size][size];
+    private String createBoard(WinnerType type, String filename) {
+        final StringBuilder sb;
+        final FileChannel channel;
+        if (filename == null) {
+            sb = new StringBuilder(size * size);
+            channel = null;
+        } else {
+            sb = null;
+            try {
+                final RandomAccessFile raf = new RandomAccessFile(filename, "rw");
+                channel = raf.getChannel();
+                channel.truncate(0);
+            } catch (IOException e) {
+                throw new IllegalArgumentException(filename);
+            }
+        }
+        final Character[][] board;
+        if (filename == null) {
+            board = new Character[size][size];
+        } else {
+            board = null;
+        }
         //fill with empty
+        int position = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                board[i][j] = '.';
+                if (filename == null) {
+                    board[i][j] = '.';
+                } else {
+                    try {
+                        channel.write(ByteBuffer.wrap(".".getBytes()), position);
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e.getMessage());
+                    }
+                    position++;
+                }
+            }
+            if (filename != null) {
+                try {
+                    channel.write(ByteBuffer.wrap(System.lineSeparator().getBytes()), position);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e.getMessage());
+                }
+                position++;
             }
         }
         final int wj = random.nextInt(size);
         //insert n random loser marks
+        int nposition = 0;
         for (int lInsert = 0; lInsert < (size + 1); lInsert++) {
-            final int i = getCord(wj);
-            final int j = getCord(wj);
-            board[i][j] = 'o';
+            if (filename == null) {
+                final int i = getCord(wj);
+                final int j = getCord(wj);
+                board[i][j] = 'o';
+            } else {
+                final int i = getCord(wj);
+                final int j = getCord(wj);
+                System.out.println("i,j " + i + "," + j);
+                nposition = i + j;
+                try {
+                    channel.position(nposition);
+                    channel.write(ByteBuffer.wrap("o".getBytes()), nposition - 1);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e.getMessage());
+                }
+            }
         }
         //insert winner marks
+        int wposition = 0;
         for (int wx = 0; wx < size; wx++) {
-            switch (type) {
-                case H:
-                    board[wj][wx] = 'x';
-                    break;
-                case V:
-                    board[wx][wj] = 'x';
-                    break;
+            if (filename == null) {
+                switch (type) {
+                    case H:
+                        board[wj][wx] = 'x';
+                        break;
+                    case V:
+                        board[wx][wj] = 'x';
+                        break;
+                }
+            } else {
+                wposition = size + size;
+                try {
+                    channel.position(nposition);
+                    channel.write(ByteBuffer.wrap("x".getBytes()), wposition - 1);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e.getMessage());
+                }
             }
         }
         //get final board
-        for (int cellX = 0; cellX < size; cellX++) {
-            for (int cellY = 0; cellY < size; cellY++) {
-                sb.append(board[cellX][cellY]);
+        if (filename == null) {
+            for (int cellX = 0; cellX < size; cellX++) {
+                for (int cellY = 0; cellY < size; cellY++) {
+                    sb.append(board[cellX][cellY]);
+                }
             }
+            return sb.toString();
         }
-        return sb.toString();
+        return filename;
     }
 
     /**
